@@ -1,3 +1,5 @@
+/* testing functions in structs */
+
 #include <stdio.h>
 
 int meaning(int a) {
