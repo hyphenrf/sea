@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 /*
 ** BITFILEDS are a way in C to make tightly packed binary data.
 ** They are not particularly the fastest option between using straight-up ints
@@ -8,6 +11,10 @@
 ** formatted in a certain way, or when you're emulating smaller architectures.
 **
 ** BEWARE of the differences between a signed and unsigned field.
+** NOTE that the first field in a bitfield is the lsb and so on.
+** NOTE that even if a struct is initialised with zeroes, padding/alignment
+** fields are to always ALWAYS be assumed garbage. Only relevant fields are
+** guaranteed zero.
 */
 
 struct {
@@ -32,7 +39,28 @@ struct {
  * any overflow resets the field essentially. */
 struct {unsigned x:10;} foo;
 /* now foo.x will always be n % 1024, but you're not saving any memory really.
- * You can also do it without bitfields without two much trouble. 
+ * You can also do it without bitfields without too much trouble. 
  * Just calculate the result and (result &(2 power n - 1)) */
 
 
+/* struct fields_32 { unsigned  :0, a:4, b:4, :24; }; */
+
+struct fields_32 { /* this should be internally [b][a][16 unused bits]*/
+	unsigned :16, a:8, b:8;
+};
+
+int main()
+{
+	struct fields_32 x = {0}; /* seems to work with std=c99 and above */
+	struct fields_32 * y = calloc(1, 4); /* to be sure the struct is zeroed */
+	x.a = 0xa;
+	x.b = 0xb;
+	y->a = 0xa;
+	y->b = 0xb;
+
+	printf("%08X\n", x);
+	printf("%08X\n", *y);
+
+	free(y); /* the tradeoff to being sure it's zeroed is heap alloc */
+	return 0;
+}
