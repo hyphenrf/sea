@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 
 	if (argc > 1) {	
 		if (isnum(argv[1]))
-			upto = atoi(argv[1]) || 1; //Never be zero
+			upto = (upto = atoi(argv[1])) ? upto : 1; //Never be zero
 		else 
 			goto err;
 	}
