@@ -1,7 +1,7 @@
 /*
  * Although used for coercion on more typesafe languages, unions in C have a
- * more profound role: They help create both a way to destruucture data, and
- * create ad-hoc polymorphism.
+ * more profound role: They help create both a way to destructure data, and
+ * create sort-of polymorphism.
  */
 #include <stdio.h>
 #include <stdint.h>
