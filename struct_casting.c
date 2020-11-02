@@ -5,6 +5,8 @@
  * you can move around a pointer to a "public" struct that's a member to another
  * private one, and to access the private one you just cast that pointer
  *
+ * This could be a primitive way to think of "inheritance" or subtyping of sorts
+ * (please don't bring OOP mindset to C programs though)
  */
 
 #include <stdio.h>
