@@ -16,7 +16,6 @@
 ** fields are to always ALWAYS be assumed garbage. Only relevant fields are
 ** guaranteed zero.
 */
-
 struct {
 	/* 1|0 flags */
 	unsigned f1 :1;
@@ -26,13 +25,17 @@ struct {
 	/* -2|-1|0|1 msb is the sign in two's comp when signed */
 	signed   f4 :2;
 	/* unnamed fields are padding */
-	unsigned    :2;
-	/* unnamed zero-fields do alignment (?) */
-	unsigned    :0;
+	unsigned    :1; /*7*/
+	/* unnamed zero-fields do alignment 
+ 	 * (ISO 9.6/2: align the next field at an allocation unit boundary) */
+	unsigned    :0; /*1*/
 	unsigned f5 :8;
 	/* PLEASE keep track of how many bits you use, as to not end up allocating
  	 * more space than you saved. i.e. ending up allocating 33 bits will allocate
- 	 * two ints */
+ 	 * two ints. 
+ 	 * Also you can't alloc in a single field something bigger than its type, e.g.
+ 	 * uint8_t :9; fails. */
+
 } custom_fields;
 
 /*TIP: unsigned fields can be used as a zero-cost 2 power n modulo. 
