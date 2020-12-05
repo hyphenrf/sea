@@ -1,4 +1,4 @@
-/* To run: gcc -march=native -o fork fork.c; ./fork; sleep 1 | sort */
+/* To run: gcc -march=native -o fork fork.c && ./fork && sleep 1 */
 
 /* Notes on the fork() syscall:
  * 	successive forks behave like a balanced binary tree
@@ -23,7 +23,10 @@
  *	-- p   c2  c1   c2 ---- 3rd call
  *	 / |  / |  | \   | \
  *	p c3 c2 c3 c1 c3 c2 c3  rest of the program
+ *	8  7  6  5  4  3  2  1  exec order with waits
  *
+ *	exec order without waits is not guaranteed, but logically it's inverse of
+ *	the one with waits.
  */
 
 #include <unistd.h>
@@ -58,8 +61,8 @@ int main()
 	wait(NULL);
 
 	printf("cycle: %lu\t", rdtsc());
-	printf("| my PID: %05d, my Parent: %05d\t", getpid(), getppid());
-	printf("| values:: c1: %05d, c2: %05d, c3: %05d\n", c1, c2, c3);
+	printf("| my PID: % 8d, my Parent: % 8d\t", getpid(), getppid());
+	printf("| values:: c1: % 8d, c2: % 8d, c3: % 8d\n", c1, c2, c3);
 
 	return 0;
 }
