@@ -2,29 +2,32 @@
 
 #include <stdio.h>
 
-int meaning(int a) {
-		return 42*a / a;
-}
-void nothing_burger(void){};
+// classes are objects that hold pointers to functions as well as data. some classes are able to refer to their `self`
+
+typedef struct hummus hummus;
+
+int meaning(hummus*, int);
 
 struct hummus {
+	hummus * self;
 	int id;
-	int (*meaninig)(int a);
-//};
-//const struct hummus DEFAULT_HUMMUS = {0, &meaning}
-} DEFAULT_HUMMUS = {0, &meaning};
+	int calls;
+	int (*method)(hummus*, int);
+}
+DEFAULT_HUMMUS = {&DEFAULT_HUMMUS, .method = meaning};
+// same as:
+// const hummus DEFAULT_HUMMUS = {&DEFAULT_HUMMUS, 0, 0, meaning /* or &meaning, both are the same like with arrays */};
 
-typedef struct{void (*nothing_burger)(void);} nothing;
-// `nothing` is sort-of class now
+int meaning(hummus* self, int a) {
+	(self->calls)++;
 
-int main(int argc, char* argv[])
-{
-	struct hummus s = DEFAULT_HUMMUS;
-	nothing news;
-	int result;
-	
-	result = s.meaninig(5);
-	printf("%d\n", result);
-	news.nothing_burger();
+	return 42 + self->id * a - a * self->id;
+}
+
+int main() {
+	hummus s = DEFAULT_HUMMUS;
+	int result = s.method(&s,5);
+
+	printf("%d, %d\n", result, s.calls);
 	return 0;
 }
