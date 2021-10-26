@@ -3,14 +3,13 @@
 
 typedef struct wrapper wrapper;
 struct wrapper {
-	int * array;
+	int array[10]; // size MUST be defined in the struct
 };
 
 wrapper
 somefun(void)
 {
-	int a[10];
-	wrapper s = {a};
+	wrapper s = {0}; // array MUST be declared inside the compound literal
 	return s;
 }
 
@@ -22,13 +21,6 @@ somefun(void)
  * damage on runtime.
  *
  * To be more precise, what's happening is that an array wrapped in a struct is
- * allowed to not decay. TODO: Find the section in C standard discussing this
- * behaviour. */
+ * allowed to not decay, and allowed to be a return type. Structs and unions etc
+ * have value semantics unlike bare arrays. */
 
-/* funnily enough, anonymous objects work too!
- * (C standard calls them compound literals) */
-int *
-someother(void)
-{ 
-	return (int[10]){0}; // C standard forbids empty braces in initializers
-}
